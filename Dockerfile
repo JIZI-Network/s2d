@@ -13,8 +13,7 @@ FROM debian:bookworm-slim AS final
 COPY --from=build /target/release/s2d /bin/
 
 RUN apt-get update \
- && apt-get install -y --no-install-recommends \
-    ca-certificates \
+ && apt-get install -y curl \
  && apt-get -y clean \
  && rm -rf /var/lib/apt/lists/*
 
