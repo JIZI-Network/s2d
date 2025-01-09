@@ -68,7 +68,7 @@ impl Default for ConfigServer {
             .sample_string(&mut thread_rng(), 32)
             .to_string();
         Self {
-            host: "127.0.0.1".to_string(),
+            host: "0.0.0.0".to_string(),
             port: 8080,
             passphrase,
         }
