@@ -2,24 +2,18 @@ mod config;
 mod models;
 
 use crate::config::ConfigRoot;
-use actix_multipart::form::bytes;
 use actix_multipart::Multipart;
 use actix_web::web::{Buf, Bytes, BytesMut};
 use actix_web::{web, App, HttpResponse, HttpServer, Responder};
 use confy::ConfyError;
 use env_logger::{Builder, Target};
 use futures_util::StreamExt as _;
-use log::{debug, error, info, trace, LevelFilter};
-use mime::Mime;
-use serenity::all::CreateEmbed;
-use serenity::builder::{CreateAttachment, ExecuteWebhook};
+use log::{debug, info, trace, LevelFilter};
+use serenity::builder::{CreateAttachment, CreateEmbed, ExecuteWebhook};
 use serenity::http::Http;
 use serenity::model::webhook::Webhook;
-use std::any::Any;
 use std::collections::HashMap;
-use std::fmt::Debug;
 use std::str::FromStr;
-use webhook;
 
 const HELLO: [&str; 4] = [
     "       ___     __",

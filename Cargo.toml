@@ -8,10 +8,17 @@ actix-web = "4.0"
 log = "0.4.0"
 env_logger = "0.11.6"
 serde = { version = "1.0.217", features = ["derive"] }
-webhook = "2.1.2"
 rand = "0.8.5"
+actix-multipart = "0.7.2"
+mime = "0.3.17"
+futures-util = "0.3.31"
 
 [dependencies.confy]
 version = "0.6.1"
 features = ["yaml_conf"]
+default-features = false
+
+[dependencies.serenity]
+version = "0.12.4"
+features = ["builder", "http", "model", "rustls_backend", "native_tls_backend"]
 default-features = false
