@@ -34,6 +34,9 @@ pub struct ConfigWebhook {
     pub subject: String,
     pub text: String,
     pub attachments: String,
+    pub might_be_a_spam: String,
+    pub might_not_be_a_spam: String,
+    pub spam_score: String,
 }
 
 impl Default for ConfigWebhook {
@@ -51,6 +54,9 @@ impl Default for ConfigWebhook {
             subject: "件名".to_string(),
             text: "本文".to_string(),
             attachments: "添付ファイルの個数".to_string(),
+            might_be_a_spam: "スパムメールの可能性が高いです。注意してください。".to_string(),
+            might_not_be_a_spam: "スパムメールの可能性は低いです。".to_string(),
+            spam_score: "spam_score".to_string(),
         }
     }
 }
@@ -60,6 +66,7 @@ pub struct ConfigServer {
     pub host: String,
     pub port: u16,
     pub passphrase: String,
+    pub required_spam_score: f64
 }
 
 impl Default for ConfigServer {
@@ -71,6 +78,7 @@ impl Default for ConfigServer {
             host: "0.0.0.0".to_string(),
             port: 8080,
             passphrase,
+            required_spam_score: 5.0,
         }
     }
 }

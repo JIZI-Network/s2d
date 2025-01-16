@@ -14,6 +14,7 @@ use serenity::http::Http;
 use serenity::model::webhook::Webhook;
 use std::collections::HashMap;
 use std::str::FromStr;
+use serenity::model::Color;
 use crate::models::Envelope;
 
 const HELLO: [&str; 4] = [
@@ -166,24 +167,43 @@ async fn transfer(
             Err(_) => return bad_request("Invalid webhook"),
         };
 
+        let embed = CreateEmbed::new()
+            .title(config.webhook.title.clone())
+            .field(config.webhook.from.clone(), form_data["from"].clone(), true)
+            .field(config.webhook.to.clone(), form_data["to"].clone(), true)
+            .field(
+                config.webhook.subject.clone(),
+                form_data["subject"].clone(),
+                true,
+            )
+            .field(
+                config.webhook.text.clone(),
+                form_data["text"].clone(),
+                false,
+            );
         let builder = ExecuteWebhook::new()
             .username(config.webhook.username.clone())
             .avatar_url(config.webhook.avatar_url.clone())
             .embed(
-                CreateEmbed::new()
-                    .title(config.webhook.title.clone())
-                    .field(config.webhook.from.clone(), form_data["from"].clone(), true)
-                    .field(config.webhook.to.clone(), form_data["to"].clone(), true)
-                    .field(
-                        config.webhook.subject.clone(),
-                        form_data["subject"].clone(),
-                        true,
-                    )
-                    .field(
-                        config.webhook.text.clone(),
-                        form_data["text"].clone(),
-                        false,
-                    ),
+                match form_data.get("spam_score") {
+                    Some(spam_score) => {
+                        let spam_score = match spam_score.parse::<f64>() {
+                            Ok(spam_score) => spam_score,
+                            Err(_) => return bad_request("Invalid spam_score"),
+                        };
+                        
+                        let embed = embed.field(config.webhook.spam_score.clone(), spam_score.to_string(), true);
+                        
+                        if spam_score > config.server.required_spam_score {
+                            embed.color(Color::RED)
+                                .description(config.webhook.might_be_a_spam.clone())
+                        } else {
+                            embed.color(Color::BLUE)
+                                .description(config.webhook.might_not_be_a_spam.clone())
+                        }
+                    },
+                    None => embed,
+                },
             )
             .add_files(
                 files
